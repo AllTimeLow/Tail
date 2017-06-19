@@ -1,0 +1,70 @@
+v    public void GetLines() {
+         try {
+             ArrayList<String> list = new ArrayList<>();
+             boolean lines = true;
+             int count = 0;
+             if (params.c > 0) {
+                 count = params.c;
+                 lines = false;
+             } else if (params.n > 0)
+                 count = params.n;
+             else
+                 count = 10;
+             if (params.inFileNames.size() > 0) {
+                 for (String name : params.inFileNames) {
+                     String folder = "/Users/LaneBoy/Desktop/Kotlin/WhatTheF**k/tile/src/", line = null;
+                     BufferedReader reader = new BufferedReader(new FileReader(folder + name));
+                     int i = 0, linesCount = 0;
+                     list.add(name);
+                     if (lines) {
+                         while (reader.readLine() != null) {
+                             linesCount++;
+                         }
+                         reader = new BufferedReader(new FileReader(folder + name));
+
+                         while ((line = reader.readLine()) != null) {
+                             if (i >= linesCount - count)
+                                 list.add(line);
+                             i++;
+                         }
+                     } else {
+                         int charCount = 0;
+                         while ((line = reader.readLine()) != null) {
+                             charCount += line.length();
+                         }
+                         reader = new BufferedReader(new FileReader(folder + name));
+                         String resLine = "";
+                         while ((line = reader.readLine()) != null) {
+                             if (charCount - line.length() > count) {
+                                 charCount -= line.length();
+                             } else {
+                                 resLine += line;
+                             }
+                         }
+                         if (resLine.length() > count)
+                             list.add(resLine.substring(resLine.length() - count));
+                         else
+                             list.add(resLine);
+                     }
+
+                 }
+                 if (Objects.equals(params.outFile, "")) {
+                     for (String item : list)
+                         System.out.println(item);
+                 } else {
+                     PrintWriter out = new PrintWriter(params.outFile);
+                     for (String item : list)
+                         out.println(item);
+                     out.close();
+                 }
+             }
+         } catch (Exception ex) {
+             System.out.println(ex.getMessage());
+         }
+     }
+
+
+     public Tail(Params _params) throws Exception {
+         params = _params;
+     }
+ }
